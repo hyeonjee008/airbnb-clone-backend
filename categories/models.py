@@ -19,5 +19,5 @@ class Category(CommonModel):
     def __str__(self) -> str:
         return f"{self.kind.title()}: {self.name}"
 
-    class Meta:
+    class Meta:  # 관리자페이지에 Categorys로 자동 생성되는데, 표출이름 수동 설정
         verbose_name_plural = "Categories"
