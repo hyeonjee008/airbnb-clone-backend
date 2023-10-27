@@ -2,13 +2,24 @@ from django.contrib import admin
 from .models import Room, Amenity
 
 
+# 이 액션 갖고있는 model_admin, 액션요청한 user 정보 갖고있는 request, 선택(체크)한 요소들 갖고있는 queryset
+@admin.action(description="Set all prices to zero")
+def reset_prices(model_admin, request, rooms):
+    for room in rooms.all():
+        room.price = 0
+        room.save()
+
+
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
+    actions = (reset_prices,)
+
     list_display = (
         "name",
         "price",
         "kind",
         "total_amenities",
+        "rating",
         "owner",
         "created_at",
     )
@@ -21,6 +32,11 @@ class RoomAdmin(admin.ModelAdmin):
         "amenities",
         "created_at",
         "updated_at",
+    )
+    search_fields = (
+        "name",
+        "^price",
+        "=owner__username",
     )
 
 

@@ -51,11 +51,22 @@ class Room(CommonModel):
         related_name="rooms",
     )
 
-    def __str__(self) -> str:
-        return self.name
+    def __str__(room) -> str:
+        return room.name
 
-    def total_amenities(self):
-        return self.amenities.count()
+    def total_amenities(room):
+        return room.amenities.count()
+
+    def rating(room):
+        count = room.reviews.count()
+        if count == 0:
+            return "No Reviews"
+        else:
+            total_rating = 0
+            # all() 사용하면 쿼리셋 객체 반환(한건한건 DB 접속해서 성능저하) -> values() 사용해서 쿼리 최적화
+            for review in room.reviews.all().values("rating"):
+                total_rating += review["rating"]  # values() 사용하면 딕셔너리 형태
+            return round(total_rating / count, 2)
 
 
 class Amenity(CommonModel):
